@@ -406,7 +406,8 @@ async def withdraw(ctx):
             output = await app.delete_user(user_panel_id)
 
             # remove user from local database
-
+            db_exec('DELETE FROM users WHERE id=?', (ctx.author.id,))
+            
             if 'errors' in output:
                 print(f'{current_time()} - [ERROR] User {user_panel_id} | {output["errors"][0]["detail"]}')
             else:
