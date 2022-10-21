@@ -404,9 +404,6 @@ async def withdraw(ctx):
 
             # remove user
             output = await app.delete_user(user_panel_id)
-
-            # remove user from local database
-            db_exec('DELETE FROM users WHERE id=?', (ctx.author.id,))
             
             if 'errors' in output:
                 print(f'{current_time()} - [ERROR] User {user_panel_id} | {output["errors"][0]["detail"]}')
@@ -416,7 +413,12 @@ async def withdraw(ctx):
             return await message.edit(
                 content='Sorry to see you go... It may take some time for all your data to be removed.'
             )
-
+    # remove user from local database
+    output = db_exec('DELETE FROM users WHERE id=?', (ctx.author.id,))
+    if output:
+        return await message.edit(
+            content='Sorry to see you go... It may take some time for all your data to be removed.'
+        )
     return await message.edit(content='Cannot find any data connected to this account.')
 
 
